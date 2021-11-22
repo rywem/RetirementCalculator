@@ -3,40 +3,57 @@ using RetirementCalculator;
 
 Console.WriteLine("Retirement Calculator");
 
+decimal startingBalance = 0;
+decimal currentSalary = 0;
+decimal contributionRate = 0;
+decimal avgRaise = 0;
+int yearsTillRetire = 0;
+decimal estimateMarketGrowth = 0;
+int numberOfPaychecks = 0;
+decimal inflation = 0;
+while(true)
+{
+    try
+    {
+        Console.WriteLine("Enter Current retirement balance: (ex: 40000)");
+        string? startingBalanceString = Console.ReadLine();
+        startingBalance = Convert.ToDecimal(startingBalanceString);
 
-Console.WriteLine("Enter Current retirement balance: (ex: 40000)");
-string? startingBalanceString = Console.ReadLine();
-decimal startingBalance = Convert.ToDecimal(startingBalanceString);
+        Console.WriteLine("Enter Current Salary: (ex: 100000)");
+        string? currentSalaryString = Console.ReadLine();
+        currentSalary = Convert.ToDecimal(currentSalaryString);
 
-Console.WriteLine("Enter Current Salary: (ex: 100000)");
-string? currentSalaryString = Console.ReadLine();
-decimal currentSalary = Convert.ToDecimal(currentSalaryString);
+        Console.WriteLine("Enter % contribution (ex: 0.15):");
+        string? contributionRateString = Console.ReadLine();
+        contributionRate = Convert.ToDecimal(contributionRateString);
 
-Console.WriteLine("Enter % contribution (ex: 0.15):");
-string? contributionRateString = Console.ReadLine();
-decimal contributionRate = Convert.ToDecimal(contributionRateString);
+        Console.WriteLine("Estimate percent average raises: (ex: 0.035)");
+        string? avgRaiseString = Console.ReadLine();
+        avgRaise = Convert.ToDecimal(avgRaiseString);
 
+        Console.WriteLine("Years until Retirement: (ex: 30)");
+        string? yearsTillRetireString = Console.ReadLine();
+        yearsTillRetire = Convert.ToInt32(yearsTillRetireString);
 
-Console.WriteLine("Estimate percent average raises: (ex: 0.035)");
-string? avgRaiseString = Console.ReadLine();
-decimal avgRaise = Convert.ToDecimal(avgRaiseString);
+        Console.WriteLine("Estimate market growth rate / yr: (ex: 0.08)");
+        string? estimateMarketGrowthString = Console.ReadLine();
+        estimateMarketGrowth = Convert.ToDecimal(estimateMarketGrowthString);
 
-Console.WriteLine("Years until Retirement: (ex: 30)");
-string? yearsTillRetireString = Console.ReadLine();
-int yearsTillRetire = Convert.ToInt32(yearsTillRetireString);
+        Console.WriteLine("Number of Paychecks / yr (ex: 26)");
+        string? numberOfPaychecksString = Console.ReadLine();
+        numberOfPaychecks = Convert.ToInt32(numberOfPaychecksString);
 
-Console.WriteLine("Estimate market growth rate / yr: (ex: 0.08)");
-string? estimateMarketGrowthString = Console.ReadLine();
-decimal estimateMarketGrowth = Convert.ToDecimal(estimateMarketGrowthString);
-
-Console.WriteLine("Number of Paychecks / yr (ex: 26)");
-string? numberOfPaychecksString = Console.ReadLine();
-int numberOfPaychecks = Convert.ToInt32(numberOfPaychecksString);
-
-Console.WriteLine("Estimate inflation: (ex: 0.02)");
-string? inflationString = Console.ReadLine();
-decimal inflation = Convert.ToDecimal(inflationString);
-
+        Console.WriteLine("Estimate inflation: (ex: 0.02)");
+        string? inflationString = Console.ReadLine();
+        inflation = Convert.ToDecimal(inflationString);
+        break;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred. Please start over.");
+        continue;
+    }
+}
 
 decimal currentValue = startingBalance;
 decimal ratePerPeriod = estimateMarketGrowth / numberOfPaychecks;
