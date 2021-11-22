@@ -33,6 +33,10 @@ Console.WriteLine("Number of Paychecks / yr (ex: 26)");
 string? numberOfPaychecksString = Console.ReadLine();
 int numberOfPaychecks = Convert.ToInt32(numberOfPaychecksString);
 
+Console.WriteLine("Estimate inflation: (ex: 0.02)");
+string? inflationString = Console.ReadLine();
+decimal inflation = Convert.ToDecimal(inflationString);
+
 
 decimal currentValue = startingBalance;
 decimal ratePerPeriod = estimateMarketGrowth / numberOfPaychecks;
@@ -50,3 +54,5 @@ for (int i = 0; i < yearsTillRetire; i++)
 
 Console.WriteLine("********");
 Console.WriteLine($"Estimated Retirement: {currentValue.ToString("c")}");
+var presentValue = PresentValue.Calculate(inflation, currentValue, yearsTillRetire);
+Console.WriteLine($"Retirement amount in today's dollars: {presentValue.ToString("c")}");

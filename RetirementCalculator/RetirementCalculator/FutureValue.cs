@@ -8,12 +8,12 @@ namespace RetirementCalculator
 {
     public static class FutureValue
     {
-        public static decimal Calculate(decimal startingBalance, decimal monthlyInvestment, decimal monthlyInterestRate, int periods)
+        public static decimal Calculate(decimal startingBalance, decimal periodInvestment, decimal periodInterestRate, int periods)
         {
             decimal futureValue = startingBalance;
             for (int i = 0; i < periods; i++)
             {
-                futureValue = (futureValue + monthlyInvestment) * (1 + monthlyInterestRate);
+                futureValue = (futureValue + periodInvestment) * (1 + periodInterestRate);
             }
 
             return futureValue;
