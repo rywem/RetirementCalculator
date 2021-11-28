@@ -11,7 +11,25 @@ int yearsTillRetire = 0;
 decimal estimateMarketGrowth = 0;
 int numberOfPaychecks = 0;
 decimal inflation = 0;
-while(true)
+decimal fourPercentRule = .04m;
+List<decimal> contributionRates = new List<decimal>();
+while (true)
+{
+    try
+    {
+        Console.WriteLine("Years until Retirement: (ex: 30)");
+        string? yearsTillRetireString = Console.ReadLine();
+        yearsTillRetire = Convert.ToInt32(yearsTillRetireString);
+        break;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred. Please try again.");
+        continue;
+    }
+}
+
+while (true)
 {
     try
     {
@@ -26,6 +44,61 @@ while(true)
         continue;
     }
 }
+while (true)
+{
+    try
+    {
+        bool addMore = true;
+        for (int i = 0; i < yearsTillRetire; i++)
+        {
+            if (addMore == true)
+            {
+                Console.WriteLine($"Enter % contribution for year {i}. 15% enter: 0.15):");
+                string? contributionRateString = Console.ReadLine();
+                contributionRate = Convert.ToDecimal(contributionRateString);
+                contributionRates.Add(contributionRate);
+
+                while (true)
+                {
+                    try
+                    {
+                        Console.WriteLine("Add more years? Y/N");
+                        string? response = Console.ReadLine();
+                        if (response != null && response.ToLower() == "y")
+                        {
+                            addMore = true;
+                            break;
+                        }
+                        else if(response != null && response.ToLower() == "n")
+                        {
+                            addMore = false;
+                            break;
+                        }
+                        throw new Exception();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Invalid response, try again");
+                        continue;
+
+                    }
+                }
+            }
+            else
+                contributionRates.Add(contributionRate);
+
+
+        }        
+        break;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred. Please try again.");
+        continue;
+    }
+}
+
 
 while (true)
 {
@@ -47,41 +120,9 @@ while (true)
 {
     try
     {
-        Console.WriteLine("Enter % contribution (for 15% enter: 0.15):");
-        string? contributionRateString = Console.ReadLine();
-        contributionRate = Convert.ToDecimal(contributionRateString);
-        break;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("An error occurred. Please try again.");
-        continue;
-    }
-}
-
-while (true)
-{
-    try
-    {
         Console.WriteLine("Estimate percent average raises: (for 3.5%, enter: 0.035)");
         string? avgRaiseString = Console.ReadLine();
         avgRaise = Convert.ToDecimal(avgRaiseString);
-        break;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("An error occurred. Please try again.");
-        continue;
-    }
-}
-
-while (true)
-{
-    try
-    {
-        Console.WriteLine("Years until Retirement: (ex: 30)");
-        string? yearsTillRetireString = Console.ReadLine();
-        yearsTillRetire = Convert.ToInt32(yearsTillRetireString);
         break;
     }
     catch (Exception ex)
@@ -140,14 +181,6 @@ while (true)
     }
 }
 
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine("An error occurred. Please try again.");
-//        continue;
-//    }
-//}
-
 decimal currentValue = startingBalance;
 decimal ratePerPeriod = estimateMarketGrowth / numberOfPaychecks;
 decimal salary = currentSalary;
@@ -155,7 +188,9 @@ decimal salary = currentSalary;
 
 for (int i = 0; i < yearsTillRetire; i++)
 {
-    decimal contributionPerPeriod = (salary * contributionRate) / numberOfPaychecks;
+    decimal contributionPerPeriod = 0;
+        
+    contributionPerPeriod = (salary * contributionRates[i]) / numberOfPaychecks;
     currentValue = FutureValue.Calculate(currentValue, contributionPerPeriod, ratePerPeriod, numberOfPaychecks);
     Console.WriteLine($"Salary: {salary.ToString("c")} ||| FV in {i + 1} years: {currentValue.ToString("c")}");
     salary = salary * (1 + avgRaise);
@@ -166,3 +201,6 @@ Console.WriteLine("********");
 Console.WriteLine($"Estimated Retirement: {currentValue.ToString("c")}");
 var presentValue = PresentValue.Calculate(inflation, currentValue, yearsTillRetire);
 Console.WriteLine($"Retirement amount in today's dollars: {presentValue.ToString("c")}");
+Console.WriteLine($"4% rule amount: {(presentValue * fourPercentRule).ToString("c")}");
+Console.WriteLine("Press 'enter' key to terminate program");
+Console.ReadLine();
