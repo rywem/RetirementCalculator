@@ -13,6 +13,7 @@ int numberOfPaychecks = 0;
 decimal inflation = 0;
 decimal fourPercentRule = .04m;
 List<decimal> contributionRates = new List<decimal>();
+decimal weightedExpense = 0.0m;
 while (true)
 {
     try
@@ -181,17 +182,43 @@ while (true)
     }
 }
 
+while (true)
+{
+    try
+    {
+        Console.WriteLine("Enter weighted expense ratio: (ex: 0.06)");
+        string? weightedExpenseString = Console.ReadLine();
+        weightedExpense = Convert.ToDecimal(weightedExpenseString);
+        break;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred. Please try again.");
+        continue;
+    }
+}
+
+
 decimal currentValue = startingBalance;
 decimal ratePerPeriod = estimateMarketGrowth / numberOfPaychecks;
 decimal salary = currentSalary;
 
-
+decimal runningExpenseTotal = 0.0m;
+decimal expenseCompounded = 0.0m;
+decimal currentValueWithFees = startingBalance;
 for (int i = 0; i < yearsTillRetire; i++)
 {
     decimal contributionPerPeriod = 0;
         
     contributionPerPeriod = (salary * contributionRates[i]) / numberOfPaychecks;
     currentValue = FutureValue.Calculate(currentValue, contributionPerPeriod, ratePerPeriod, numberOfPaychecks);
+
+
+    currentValueWithFees = FutureValue.Calculate(currentValueWithFees, contributionPerPeriod, ratePerPeriod, numberOfPaychecks);
+    decimal currentExpense = currentValueWithFees * (weightedExpense * 0.01m);
+    currentValueWithFees -= currentExpense;
+
+
     Console.WriteLine($"Salary: {salary.ToString("c")} ||| FV in {i + 1} years: {currentValue.ToString("c")}");
     salary = salary * (1 + avgRaise);
 
@@ -202,5 +229,14 @@ Console.WriteLine($"Estimated Retirement: {currentValue.ToString("c")}");
 var presentValue = PresentValue.Calculate(inflation, currentValue, yearsTillRetire);
 Console.WriteLine($"Retirement amount in today's dollars: {presentValue.ToString("c")}");
 Console.WriteLine($"4% rule amount: {(presentValue * fourPercentRule).ToString("c")}");
+
+
+Console.WriteLine($"Estimated Retirement with Fees: {currentValueWithFees.ToString("c")}");
+var presentValueWithFees = PresentValue.Calculate(inflation, currentValueWithFees, yearsTillRetire);
+Console.WriteLine($"Retirement amount in today's dollars: {presentValueWithFees.ToString("c")}");
+Console.WriteLine($"4% rule amount with fees: {(presentValueWithFees * fourPercentRule).ToString("c")}");
+
+Console.WriteLine($"401k Balance Difference with fees: {(currentValue - currentValueWithFees).ToString("c")}");
+
 Console.WriteLine("Press 'enter' key to terminate program");
 Console.ReadLine();
